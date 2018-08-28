@@ -20,8 +20,8 @@
 #include <avr/pgmspace.h>
 #include <stdio.h>
 
-#include "bits.h"
-#include "avr_gpio.h"
+#include "../lib/bits.h"
+#include "../lib/avr_gpio.h"
 
 
 //Definições para facilitar a troca dos pinos do hardware e facilitar a re-programação

@@ -27,14 +27,11 @@ const uint8_t convTable[] PROGMEM = { ...  };
 void display_init() {
 
 	/* Configuração de portas */
-	//DISPLAY_PORT->DDR = (...)
-
-
+	DISPLAY_PORT->DDR = ((1<<PD0)|(1<<PD1)|(1<<PD2)|(1<<PD3)|(1<<PD4)|(1<<PD5)|(1<<PD6));
 }
 
 void display_write(uint8_t data){
 
 	/* Escreve no display */
-	//DISPLAY_PORT->PORT = (...)
-
+	DISPLAY_PORT->PORT = (pgm_read_byte(&convTable[data]));
 }

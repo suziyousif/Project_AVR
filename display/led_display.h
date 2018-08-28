@@ -12,7 +12,7 @@
 #define COM_ANODO
 //#define COM_CATODO
 
-#define DISPLAY_PORT GPIO_B
+#define DISPLAY_PORT GPIO_D
 
 /**
   * @brief  Configura hardware.
