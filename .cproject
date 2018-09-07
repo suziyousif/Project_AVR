@@ -105,7 +105,7 @@
                     					
                     <sourceEntries>
                         						
-                        <entry excluding="display/led_display_simple_mux.c|Pisca_LED_.c|asm/stringInit.S|asm/init.S|asm/app_base.S|01_main_simple_display.c|01_main_simple_gpio.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+                        <entry excluding="04_main_external_irq.c|display_7seg.c|03_main_uart_debug.c|02_main_simple_lcd.c|01_main_simple_display_mux.c|Pisca_LED_.c|asm/stringInit.S|asm/init.S|asm/app_base.S|01_main_simple_gpio.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
                         					
                     </sourceEntries>
                     				

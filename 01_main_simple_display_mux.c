@@ -14,27 +14,17 @@
 /* Bibliotecas customizadas */
 #include "lib/avr_gpio.h"
 #include "lib/bits.h"
-#include "display/led_display.h"
-#define BUTTON_PORT GPIO_B
-#define BUTTON_PIN PB0
+#include "display/led_display_simple_mux.h"
 
-void hardware_init(){
-	BUTTON_PORT->PORT = SET(BUTTON_PIN);
-}
+
 int main(){
 	/* Configura hardware do projeto */
-	hardware_init();
-	display_init();
-	uint8_t valor = 0;
+	displaysInit(2);
+
 	while (1){
-		if (GPIO_PinTstBit(BUTTON_PORT, BUTTON_PIN) == 0){
-			if (valor <= 0x0f){
-				display_write(valor);
-				valor++;
-				_delay_ms(200);
-			}else
-				valor = 0;
-		}
+		displaysWrite(0x75);
 	}
+
 	return 0;
+
 }

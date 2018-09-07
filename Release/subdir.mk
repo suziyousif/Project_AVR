@@ -4,13 +4,13 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../display_7seg.c 
+../01_main_simple_display.c 
 
 OBJS += \
-./display_7seg.o 
+./01_main_simple_display.o 
 
 C_DEPS += \
-./display_7seg.d 
+./01_main_simple_display.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
