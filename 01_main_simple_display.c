@@ -25,6 +25,7 @@ int main(){
 	/* Configura hardware do projeto */
 	hardware_init();
 	display_init();
+
 	uint8_t valor = 0;
 	while (1){
 		if (GPIO_PinTstBit(BUTTON_PORT, BUTTON_PIN) == 0){

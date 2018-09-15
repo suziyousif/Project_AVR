@@ -10,9 +10,9 @@
 #include <util/delay.h>
 
 #include <stdio.h>
-
-#include "avr_gpio.h"
 #include "display/lcd.h"
+#include "lib/avr_gpio.h"
+
 
 
 int main(){

@@ -29,15 +29,20 @@ ISR(INT1_vect)
 
 
 /* PCINT deve-se testar qual pino gerou a IRQ */
-/*ISR(PCINT1_vect)
+ISR(PCINT1_vect)
 {
-	if(!tst_bit(PINC,PC0))
+	if(!TST_BIT(PINC,PC0))
 		led = 2;
-	else if(!tst_bit(PINC,PC1))
+	else if(!TST_BIT(PINC,PC1))
 		led = 4;
-	else if(!tst_bit(PINC,PC2))
+	else if(!TST_BIT(PINC,PC2))
 		led = 8;
-}*/
+}
+ISR(PCINT2_vect)
+{
+	if(!TST_BIT(PIND,PD0))
+		led = 16;
+}
 
 int main(){
 
@@ -49,8 +54,8 @@ int main(){
 	GPIO_C->PORT = ~((1 << PC0) | (1 << PC1) | (1 << PC2));
 
 	/* PINOS PD2 e PD3 como entrada e pull ups */
-	GPIO_D->DDR  = ~((1 << PD2) | (1 << PD3));   /* DDRD  = ~((1 << PD2) | (1 << PD3)).  */
-	GPIO_D->PORT = (1 << PD2) | (1 << PD3);  /* PORTD = (1 << PD2) | (1 << PD3) */
+	GPIO_D->DDR  = ~((1 << PD2) | (1 << PD3) | (1 << PD0));   /* DDRD  = ~((1 << PD2) | (1 << PD3)).  */
+	GPIO_D->PORT = (1 << PD2) | (1 << PD3) | (1 << PD0);  /* PORTD = (1 << PD2) | (1 << PD3) */
 
 	/* Configuração IRQ externas: INT0 e INT1 na borda de descida */
 	EICRA = (1 << ISC01) | (1 << ISC11);
@@ -58,9 +63,10 @@ int main(){
 	EIMSK = (1 << INT1)  | (1 << INT0);
 
 	/* Configura modo */
-//	PCICR = 1 << PCIE1;
+	PCICR = (1 << PCIE1) | (1 << PCIE2);
 	/* Habilita IRQ do periférico */
-	///PCMSK1 = (1 << PCINT10) | (1 << PCINT9) | (1 << PCINT8);
+	PCMSK1 = (1 << PCINT10) | (1 << PCINT9) | (1 << PCINT8);
+	PCMSK2 = (1 << PCINT16);
 
 	/* Habilita IRQ global */
 	sei();
