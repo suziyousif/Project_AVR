@@ -37,7 +37,7 @@ void timer0_pwm_hardware_init(){
 	/* OCRA define frequência do PWM */
 	TIMER_0->OCRA = 200;
 
-	/* OCRB define razão cíclica:  OCRB / OCRA */
+	/* OCRB define razão cíclica:  OCRB / OCRA */   //tempo em alto d = 150/200
 	TIMER_0->OCRB = 150;
 }
 

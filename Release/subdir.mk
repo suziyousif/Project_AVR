@@ -4,13 +4,13 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../05_main_pwm.c 
+../main_RelogioMux_Timer.c 
 
 OBJS += \
-./05_main_pwm.o 
+./main_RelogioMux_Timer.o 
 
 C_DEPS += \
-./05_main_pwm.d 
+./main_RelogioMux_Timer.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

@@ -4,22 +4,22 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../display/Relogio_mux_Timer.c \
 ../display/displaySerial.c \
-../display/display_mux_Timer.c \
 ../display/lcd.c \
 ../display/led_display.c \
 ../display/led_display_simple_mux.c 
 
 OBJS += \
+./display/Relogio_mux_Timer.o \
 ./display/displaySerial.o \
-./display/display_mux_Timer.o \
 ./display/lcd.o \
 ./display/led_display.o \
 ./display/led_display_simple_mux.o 
 
 C_DEPS += \
+./display/Relogio_mux_Timer.d \
 ./display/displaySerial.d \
-./display/display_mux_Timer.d \
 ./display/lcd.d \
 ./display/led_display.d \
 ./display/led_display_simple_mux.d 
