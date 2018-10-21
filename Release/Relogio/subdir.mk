@@ -4,26 +4,17 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../display/displaySerial.c \
-../display/lcd.c \
-../display/led_display.c \
-../display/led_display_simple_mux.c 
+../Relogio/Relogio_mux_Timer.c 
 
 OBJS += \
-./display/displaySerial.o \
-./display/lcd.o \
-./display/led_display.o \
-./display/led_display_simple_mux.o 
+./Relogio/Relogio_mux_Timer.o 
 
 C_DEPS += \
-./display/displaySerial.d \
-./display/lcd.d \
-./display/led_display.d \
-./display/led_display_simple_mux.d 
+./Relogio/Relogio_mux_Timer.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
-display/%.o: ../display/%.c
+Relogio/%.o: ../Relogio/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: AVR Compiler'
 	avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega328p -DF_CPU=16000000UL -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"

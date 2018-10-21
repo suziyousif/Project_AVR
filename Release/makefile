@@ -10,6 +10,9 @@ RM := rm -rf
 -include sources.mk
 -include lib/subdir.mk
 -include display/subdir.mk
+-include Teclado_Matricial/subdir.mk
+-include ServoMotor/subdir.mk
+-include Relogio/subdir.mk
 -include subdir.mk
 -include objects.mk
 

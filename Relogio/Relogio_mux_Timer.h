@@ -28,7 +28,7 @@ void button_config();
 /*configuração dos displays*/
 void mux_disp_Init();
 void set_disp(uint8_t display, uint8_t data);
-void iniciar_relogio();
+void relogio();
 
 /*configuração geral do hardware*/
 void hardware_config_relogio();

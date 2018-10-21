@@ -40,7 +40,8 @@ ISR(TIMER0_OVF_vect){
 	uint8_t seg;
 	DISPLAY_MUX_PORT->PORT = 0x0;  //desligar os displays
 	seg = disp[i];
-	DISPLAY_DATA_PORT->PORT = pgm_read_byte(&conv_Table_[seg]);		//enviar os dados
+	DISPLAY_DATA_PORT->PORT = pgm_read_byte(&conv_Table_[seg]);
+	//enviar os dados
 	SET_BIT(DISPLAY_MUX_PORT->PORT, i);		//selecionar o display
 
 	i++;
@@ -76,7 +77,7 @@ ISR(TIMER1_COMPA_vect){
 /*botão para incrementar a hora, o minuto e o segundo*/
 ISR(PCINT0_vect){
 	if(!TST_BIT(PINB,PB0)){
-		if(hora < 24)
+		if(hora < 23)
 			hora++;
 		else
 			hora = 0;
@@ -117,7 +118,7 @@ void set_disp(uint8_t display, uint8_t data){
 	disp[display] = data;
 }
 
-void iniciar_relogio(){
+void relogio(){
 	set_disp(0, seg % 10);
 	set_disp(1, seg / 10);
 	set_disp(2, min % 10);

@@ -17,7 +17,7 @@ int main(){
 	sei();
 
 	while (1){
-		iniciar_relogio();
+		relogio();
 	}
 	return 0;
 }
