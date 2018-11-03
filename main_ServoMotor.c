@@ -11,7 +11,6 @@
 #include <avr/io.h>
 #include "ServoMotor/ServoMotor.h"
 #include "display/lcd.h"
-#include "Teclado_Matricial/TecladoMatricial.h"
 
 int main(){
 

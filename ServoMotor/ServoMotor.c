@@ -65,7 +65,7 @@ void Motor_control(FILE *lcd_stream){
 			escreve_LCD_Flash(msg2);
 			buffer[k] = '\0';
 			angulo = atoi(buffer); 	//converter para int
-			duty_Cycle = ((((uint32_t)angulo+90)*250)/180) + 125;
+			duty_Cycle = ((((uint32_t)angulo+90)*250)/180) + 125;  //cálculo da razão cíclica em função do angulo
 			set_DutyCycle(duty_Cycle);
 			//fprintf(lcd_stream, "%u", duty_Cycle);  //Debug
 			k=0;
