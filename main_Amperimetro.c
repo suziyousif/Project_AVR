@@ -14,20 +14,17 @@
 #include "Amperimetro_4Escalas/Amperimetro.h"
 #include "lib/avr_gpio.h"
 #include "lib/avr_adc.h"
+#include "lib/avr_timer.h"
 
 #define BUTTON_PORT GPIO_D
 #define BUTTON_PIN PD6
+volatile uint16_t valor_adc = 0;
+volatile uint16_t corrente = 0;
 
 prog_char msg1[]= "Escala:";
 prog_char msg2[]= "Corrente:";
-volatile uint8_t i =0;
+//volatile uint8_t i =0;
 
-ISR(PCINT2_vect){
-	if (i > 3)
-		i = 0;
-	if(!!TST_BIT(PIND,PD6))
-		i++;
-}
 void button_config(){
 	/* PINOS como entrada e pull ups */
 	GPIO_D->DDR  = ~(1 << PD6);
@@ -38,27 +35,18 @@ void button_config(){
 	PCMSK2 = (1 << PCINT22);
 }
 
-volatile uint16_t valor_adc = 0;
-volatile double corrente = 0;
-
 void adc_init(){
-
 	/* Ref externa no pino AVCC com capacitor de 100n em VREF.
 	 * Habiltiação apenas no Canal 0 */
 	ADCS->AD_MUX = SET(REFS0);
-	/* Habilita AD:
-	 * Conversão contínua
-	 * IRQ ativo
-	 * Prescaler de 128 */
+	/* Habilita AD: * Conversão contínua * IRQ ativo * Prescaler de 128 */
 	ADCS->ADC_SRA = SET(ADEN)  |	//ADC Enable
 					SET(ADSC)  | 	// ADC Start conversion
 					SET(ADATE) |	// ADC Auto Trigger
 					SET(ADPS0) | SET(ADPS1) | SET(ADPS2) | //ADPS[0..2] AD Prescaler selection
 					SET(ADIE); 		//AD IRQ ENABLE
-
 	/* Desabilita hardware digital de PC0 */
 	ADCS->DIDr0.BITS.ADC0 = 1;
-
 }
 
 ISR(ADC_vect)
@@ -66,8 +54,40 @@ ISR(ADC_vect)
 	valor_adc = ADC;
 }
 
-int main(){
+/*-----------------------------------------------*/
+/*void f_stateA(void);
+void f_stateB(void);
+void f_stateC(void);
+void f_stateD(void);*/
 
+/* Definição dos estados */
+/*typedef enum {
+	STATE_A,
+	STATE_B,
+	STATE_C,
+	STATE_D,
+	NUM_STATES
+} state_t;*/
+
+/* Definição da estrutura mantenedora do vetor de estados */
+/*typedef struct {
+	state_t myState;
+	void (*func)(void);
+}fsm_t;*/
+
+/* Mapeamento entre estado e funções */
+/*fsm_t myFSM[] = {
+	{ STATE_A, f_stateA },
+	{ STATE_B, f_stateB },
+	{ STATE_C, f_stateC },
+	{ STATE_D, f_stateD },
+
+};*/
+
+/* Estado atual */
+//volatile state_t curr_state = STATE_A;
+/*-----------------------------------------------*/
+int main(){
 	/* Configura hardware do projeto */
 	button_config();
 	adc_init();
@@ -76,15 +96,43 @@ int main(){
 	inic_LCD_4bits();
 	escreve_LCD_Flash(msg1);
 	//cmd_LCD(0xc0,0);
+
 	sei();
 	while (1){
-		fprintf(lcd_stream,"%d", valor_adc);
-		//corrente = ((float)valor_adc) * 19.53426/1000 -10.0516;
-		corrente = ((double)valor_adc) * 5/1024;
-		corrente = corrente*10/42;
-		corrente = (corrente - 0.5954806)/0.0601656;
-		fprintf(lcd_stream,"%f", corrente);
+		corrente = (valor_adc) * 49/100;
+		corrente = corrente*100/42;
+		corrente = (corrente*10 / 60)/10 - 9.897;
+		fprintf(lcd_stream,"%d", corrente);
+		if (corrente == 9){
+			lcd_putchar('*', lcd_stream);
+		}
 		_delay_ms(1000);
 	}
 	return 0;
 }
+
+/*
+ISR(PCINT2_vect){
+	static uint8_t i = 0;
+	if(!!TST_BIT(PIND,PD6))
+		i++;
+	switch (i) {
+		case 1:
+			curr_state = STATE_A;
+			break;
+		case 2:
+			curr_state = STATE_B;
+			break;
+		case 3:
+			curr_state = STATE_C;
+			break;
+		case 4:
+			curr_state = STATE_D;
+			break;
+		default:
+			i = 0;
+			break;
+	}
+}*/
+
+
