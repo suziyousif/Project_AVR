@@ -19,7 +19,7 @@
 #define BUTTON_PORT GPIO_D
 #define BUTTON_PIN PD6
 volatile uint16_t valor_adc = 0;
-volatile uint16_t corrente = 0;
+//volatile float corrente = 0;
 
 prog_char msg1[]= "Escala:";
 prog_char msg2[]= "Corrente:";
@@ -45,8 +45,11 @@ void adc_init(){
 					SET(ADATE) |	// ADC Auto Trigger
 					SET(ADPS0) | SET(ADPS1) | SET(ADPS2) | //ADPS[0..2] AD Prescaler selection
 					SET(ADIE); 		//AD IRQ ENABLE
-	/* Desabilita hardware digital de PC0 */
+	/* Desabilita hardware digital de PC0 a PC3 */
 	ADCS->DIDr0.BITS.ADC0 = 1;
+	ADCS->DIDr0.BITS.ADC1 = 1;
+	ADCS->DIDr0.BITS.ADC2 = 1;
+	ADCS->DIDr0.BITS.ADC3 = 1;
 }
 
 ISR(ADC_vect)
@@ -55,84 +58,140 @@ ISR(ADC_vect)
 }
 
 /*-----------------------------------------------*/
-/*void f_stateA(void);
+void f_stateA(void);
 void f_stateB(void);
 void f_stateC(void);
-void f_stateD(void);*/
+void f_stateD(void);
 
 /* Definição dos estados */
-/*typedef enum {
+typedef enum {
 	STATE_A,
 	STATE_B,
 	STATE_C,
 	STATE_D,
 	NUM_STATES
-} state_t;*/
+} state_t;
 
 /* Definição da estrutura mantenedora do vetor de estados */
-/*typedef struct {
+typedef struct {
 	state_t myState;
 	void (*func)(void);
-}fsm_t;*/
+}fsm_t;
 
 /* Mapeamento entre estado e funções */
-/*fsm_t myFSM[] = {
+fsm_t myFSM[] = {
 	{ STATE_A, f_stateA },
 	{ STATE_B, f_stateB },
 	{ STATE_C, f_stateC },
 	{ STATE_D, f_stateD },
 
-};*/
+};
 
 /* Estado atual */
-//volatile state_t curr_state = STATE_A;
+volatile state_t curr_state = STATE_A;
 /*-----------------------------------------------*/
+union{
+	struct{
+		uint16_t decimal:4;
+		uint16_t inteiro:6;
+	};
+	uint16_t valor;
+}x;
+FILE *lcd_stream;
 int main(){
 	/* Configura hardware do projeto */
 	button_config();
 	adc_init();
 
-	FILE *lcd_stream = inic_stream();
+	lcd_stream= inic_stream();
 	inic_LCD_4bits();
 	escreve_LCD_Flash(msg1);
 	//cmd_LCD(0xc0,0);
-
 	sei();
 	while (1){
-		corrente = (valor_adc) * 49/100;
+		(*myFSM[curr_state].func)();
+		//x.valor = valor_adc;
+		/*corrente = (valor_adc) * 49/100;
 		corrente = corrente*100/42;
 		corrente = (corrente*10 / 60)/10 - 9.897;
 		fprintf(lcd_stream,"%d", corrente);
 		if (corrente == 9){
 			lcd_putchar('*', lcd_stream);
-		}
+		}*/
+
+		/*x.valor = (valor_adc-516)*80/254;
+		fprintf(lcd_stream,"%d", x.inteiro);
+		lcd_putchar('.', lcd_stream);
+		fprintf(lcd_stream,"%02d", (x.decimal)*100/16);*/
 		_delay_ms(1000);
 	}
 	return 0;
 }
 
-/*
+
 ISR(PCINT2_vect){
 	static uint8_t i = 0;
 	if(!!TST_BIT(PIND,PD6))
 		i++;
+	CLR_BIT(ADCS->ADC_SRA, ADEN);
 	switch (i) {
-		case 1:
-			curr_state = STATE_A;
-			break;
-		case 2:
-			curr_state = STATE_B;
-			break;
-		case 3:
-			curr_state = STATE_C;
-			break;
-		case 4:
-			curr_state = STATE_D;
-			break;
-		default:
-			i = 0;
-			break;
+	case 1:
+		curr_state = STATE_A;
+		ADCS->AD_MUX = SET(REFS0);
+		break;
+	case 2:
+		curr_state = STATE_B;
+		ADCS->AD_MUX = SET(REFS0) | SET(MUX0);
+		break;
+	case 3:
+		curr_state = STATE_C;
+		ADCS->AD_MUX = SET(REFS0) | SET(MUX1);
+		break;
+	case 4:
+		curr_state = STATE_D;
+		ADCS->AD_MUX = SET(REFS0) | SET(MUX0) | SET(MUX1);
+		break;
+	default:
+		i = 0;
+		break;
 	}
-}*/
+	SET_BIT(ADCS->ADC_SRA, ADEN);
+	SET_BIT(ADCS->ADC_SRA, ADSC);
+}
 
+void f_stateA(void){
+	x.valor = (valor_adc-516)*80/254;
+	cmd_LCD(0x01, 0);
+	fprintf(lcd_stream,"%d", valor_adc);
+	fprintf(lcd_stream,"Escala: 10A");
+	cmd_LCD(0xc0, 0);
+	fprintf(lcd_stream,"corrente: %d.%02d", x.inteiro, (x.decimal)*100/16);
+	//lcd_putchar('.', lcd_stream);
+	//fprintf(lcd_stream,"%02d", (x.decimal)*100/16);
+}
+
+void f_stateB(void){
+	x.valor = (valor_adc-344)*8/17;
+	cmd_LCD(0x01, 0);
+	fprintf(lcd_stream,"%d", valor_adc);
+	fprintf(lcd_stream,"Escala: 20A");
+	cmd_LCD(0xc0, 0);
+	fprintf(lcd_stream,"corrente: %d.%02d", x.inteiro, (x.decimal)*100/16);
+}
+
+void f_stateC(void){
+	x.valor = ((uint32_t)valor_adc-205)*640/819;
+	cmd_LCD(0x01, 0);
+	fprintf(lcd_stream,"Escala: 40A");
+	cmd_LCD(0xc0, 0);
+	fprintf(lcd_stream,"corrente: %d.%02d", x.inteiro, (x.decimal)*100/16);
+}
+
+void f_stateD(void){
+	x.valor = ((uint32_t)valor_adc-170)*400/427;
+	cmd_LCD(0x01, 0);
+	fprintf(lcd_stream,"Escala: 50A");
+	cmd_LCD(0xc0, 0);
+	fprintf(lcd_stream,"corrente: %d.%02d", x.inteiro, (x.decimal)*100/16);
+}
 
