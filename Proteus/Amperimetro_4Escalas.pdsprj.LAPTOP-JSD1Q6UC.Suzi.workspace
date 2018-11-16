@@ -3,7 +3,6 @@
  <FRAME activewindow="0">
   <PLACEMENT>2c00000002000000030000000083ffff0083ffffffffffffffffffff00000000000000001c060000ee030000</PLACEMENT>
   <WINDOW type="default" module="ISIS"/>
-  <WINDOW type="default" module="STARTUP"/>
  </FRAME>
  <MODULE name="VSMDEBUG">
   <PWI>
@@ -95,6 +94,9 @@
      <ITEM name="ShowToolTips">Yes</ITEM>
      <ITEM name="TopLineAddress">00000020</ITEM>
     </PROPERTIES>
+   </POPUP>
+   <POPUP w="695" x="169" flags="00000000" y="404" h="459" pid="0" iid="30">
+    <PROPERTIES/>
    </POPUP>
   </PWI>
  </MODULE>
