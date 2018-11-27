@@ -17,7 +17,6 @@
 #include "../lib/avr_adc.h"
 
 volatile uint16_t ADC_value = 0, current=0;
-volatile uint8_t i = 1;
 volatile uint16_t buffer[N_SAMPLES];
 FILE *lcd_stream;
 
@@ -79,14 +78,13 @@ void adc_init(){
 
 ISR(ADC_vect)
 {
-	uint8_t J;
-	ADC_value = 0;
-	for (J = N_SAMPLES - 1; J > 0; J--){
-		buffer[J] = buffer[J-1];
-		ADC_value += buffer[J];
-	}
-	buffer[0] = ADC;
-	ADC_value = (buffer[0]+ADC_value);
+	static uint8_t j=0;
+	uint16_t adc_v = ADC;
+
+	ADC_value = ADC_value - buffer[j] + adc_v;
+	buffer[j++] = adc_v;
+
+	j&=0x7;
 }
 
 void button_config(){
@@ -101,6 +99,7 @@ void button_config(){
 
 //Verificação do botão para escolher a escala
 ISR(PCINT2_vect){
+	static uint8_t i=1;
 	if(!!TST_BIT(PIND,PD6))
 		i++;
 	CLR_BIT(ADCS->ADC_SRA, ADEN);							//ADC Disable
