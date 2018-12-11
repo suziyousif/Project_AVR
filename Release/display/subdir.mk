@@ -6,18 +6,21 @@
 C_SRCS += \
 ../display/displaySerial.c \
 ../display/lcd.c \
+../display/lcd_i2c.c \
 ../display/led_display.c \
 ../display/led_display_simple_mux.c 
 
 OBJS += \
 ./display/displaySerial.o \
 ./display/lcd.o \
+./display/lcd_i2c.o \
 ./display/led_display.o \
 ./display/led_display_simple_mux.o 
 
 C_DEPS += \
 ./display/displaySerial.d \
 ./display/lcd.d \
+./display/lcd_i2c.d \
 ./display/led_display.d \
 ./display/led_display_simple_mux.d 
 

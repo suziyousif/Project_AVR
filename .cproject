@@ -105,7 +105,7 @@
                     					
                     <sourceEntries>
                         						
-                        <entry excluding="Teclado_Matricial|Relogio|ServoMotor|main_ServoMotor.c|07_main_adc.c|09_main_sin_table.c|05_main_pwm.c|02_main_simple_lcd.c|main_RelogioMux_Timer.c|08_main_fsm.c|06_main_an_comp.c|main_mux_Timer.c|05_main_timer.c|project_displaySerial.c|01_main_simple_display_mux.c|04_main_external_irq.c|01_main_simple_display.c|display_7seg.c|03_main_uart_debug.c|Pisca_LED_.c|asm/stringInit.S|asm/init.S|asm/app_base.S|01_main_simple_gpio.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+                        <entry excluding="11_main_lcd_i2c.c|bmp085|Pisca_LED_.c|lib/avr_i2c.c|09_main_1wire.c|10_main_spi.c|main_Amperimetro.c|Amperimetro_4Escalas|Teclado_Matricial|Relogio|ServoMotor|main_ServoMotor.c|07_main_adc.c|09_main_sin_table.c|05_main_pwm.c|02_main_simple_lcd.c|main_RelogioMux_Timer.c|08_main_fsm.c|06_main_an_comp.c|main_mux_Timer.c|05_main_timer.c|project_displaySerial.c|01_main_simple_display_mux.c|04_main_external_irq.c|01_main_simple_display.c|display_7seg.c|03_main_uart_debug.c|asm/stringInit.S|asm/init.S|asm/app_base.S|01_main_simple_gpio.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
                         					
                     </sourceEntries>
                     				

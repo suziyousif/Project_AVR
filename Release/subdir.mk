@@ -4,13 +4,13 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../main_Amperimetro.c 
+../main_gy80.c 
 
 OBJS += \
-./main_Amperimetro.o 
+./main_gy80.o 
 
 C_DEPS += \
-./main_Amperimetro.d 
+./main_gy80.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
