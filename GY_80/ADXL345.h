@@ -31,7 +31,7 @@ typedef union
 }axis_t;
 
 void ADXL345_init();
-void Multiple_Byte_Read(axis_t *axis, FILE *file);
+void Multiple_Byte_Read(axis_t *axis);
 void print_axis(axis_t *axis, FILE *file);
 
 #endif /* GY_80_ADXL345_H_ */

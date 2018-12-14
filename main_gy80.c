@@ -24,20 +24,13 @@ int main(){
 
 	/* I2C for ADXL345 initialization */
 	ADXL345_init();
-
+	timer1_hardware_init();
 	sei();
 
-	for(;;) {
-		//Multiple_Byte_Read(&axis, usart_stream);
+	GPIO_ClrBit(GPIO_B, PB0);
 
-		//DEBUG
-		/*print_axis(&axis, usart_stream);
-		axis.x = 2;
-		axis.y = 3;
-		axis.z = 4;*/
-
+	while(1) {
 		RTU_package_ADXL345(usart_stream, &pkg, &axis);
-		_delay_ms(500);
 	}
-
+	return 0;
 }

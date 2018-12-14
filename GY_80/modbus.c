@@ -6,9 +6,14 @@
  */
 
 #include "../lib/avr_usart.h"
+#include "../lib/bits.h"
 #include <util/delay.h>
+#include <avr/interrupt.h>
+#include "../lib/avr_timer.h"
 #include "ADXL345.h"
 #include "modbus.h"
+
+volatile uint8_t timeout = 0;
 
 void RTU_package_ADXL345(FILE *usart_stream, package_t *pkg, axis_t *data)
 {
@@ -16,7 +21,7 @@ void RTU_package_ADXL345(FILE *usart_stream, package_t *pkg, axis_t *data)
 	uint8_t i;
 
 	/* Read ADXL345 sensor_reg */
-	Multiple_Byte_Read(data, usart_stream);
+	Multiple_Byte_Read(data);
 
 	pkg->addr = MODBUS_ADDRESS;
 	pkg->cmd = MODBUS_WRITE;
@@ -37,23 +42,25 @@ void RTU_package_ADXL345(FILE *usart_stream, package_t *pkg, axis_t *data)
 		USART_tx((uint8_t)(pkg->crc >> 8));
 		USART_tx((uint8_t)(pkg->crc));
 
-		pkg->addr = USART_rx();
-		pkg->cmd = USART_rx();
-		pkg->reg = USART_rx();
-		pkg->reg = (pkg->reg <<8) | USART_rx();
-		pkg->data = USART_rx();
-		pkg->data = (pkg->data <<8) | USART_rx();
-		pkg->crc = USART_rx();
-		pkg->crc = (pkg->crc <<8) | USART_rx();
+		TIMER_1->TCNT = 0;
+		timeout = 1;
 
-		/*Usart_Get_Data((uint8_t*)pkg->addr, 1);
-		Usart_Get_Data((uint8_t*)pkg->cmd, 1);
-		Usart_Get_Data((uint8_t*)pkg->reg, 2);
-		Usart_Get_Data((uint8_t*)pkg->data, 2);
-		Usart_Get_Data((uint8_t*)pkg->crc, 2);*/
+		while((timeout == 1)){
+			if (USART_buffer_size() == 7){
+				timeout = 0;
+				break;
+			}
+		}
+
+		if (timeout == 2) {
+			GPIO_SetBit(LED_PORT, LED_PIN);
+			return;
+		}
+
 		sensor_reg++;
-		_delay_ms(3500);
+		_delay_ms(500);
 	}
+	GPIO_ClrBit(GPIO_B, PB0);
 }
 
 void modbus_write(package_t *pkg, uint16_t sensor_reg, uint16_t data)
@@ -94,3 +101,20 @@ uint16_t swap_bytes(uint16_t data)
 	new_data |= data_;
 	return new_data;
 }
+
+void timer1_hardware_init(){
+
+	/* Acesso indireto por struct e bit field: com avr_timer.h */
+	TIMER_1->TCCRA = 0;
+	/* Modo Normal e prescaler 1024 */
+	TIMER_1->TCCRB = SET(CS10) | SET(CS12);
+
+	/* Habilitação da IRQ*/
+	TIMER_IRQS->TC1.BITS.TOIE = 1;
+}
+
+ISR(TIMER1_OVF_vect){
+	clear_buff();
+	timeout = 2;
+}
+

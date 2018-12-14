@@ -21,7 +21,7 @@ void ADXL345_init(){
 	TWI_Start_Transceiver_With_Data(I2C_buf, 3); /* Send message to transceiver */
 }
 
-void Multiple_Byte_Read(axis_t *axis, FILE *file){
+void Multiple_Byte_Read(axis_t *axis){
 	I2C_buf[0] = ADXL345_ADDRESS_WRITE;
 	I2C_buf[1] = AXIS_ADDRESS;
 	TWI_Start_Transceiver_With_Data(I2C_buf, 2);
@@ -50,6 +50,5 @@ void print_axis(axis_t *axis, FILE *file){
 	fprintf(file,"x= %d, y= %d, z= %d\n\r",
 			axis->x, axis->y, axis->z);
 }
-
 
 

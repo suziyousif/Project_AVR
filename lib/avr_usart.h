@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include <avr/io.h>
 #include <stdio.h>
+#include "avr_gpio.h"
 
 #ifndef _IO
 #define _IO volatile uint8_t
@@ -25,6 +26,8 @@
 #define B9600  (F_CPU/16/9600-1)
 #define B57600  (F_CPU/16/57600-1)
 #define B115200  (F_CPU/16/115200-1)
+#define USART_RX_BUFFER_SIZE 8
+
 
 /* Registers structure definition */
 typedef struct
@@ -46,6 +49,8 @@ FILE * get_usart_stream();
 
 void USART_tx(uint8_t data);
 uint8_t USART_rx();
-
+uint8_t USART_get_buffer(uint8_t index);
+uint8_t USART_buffer_size();
+void clear_buff();
 
 #endif

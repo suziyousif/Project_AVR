@@ -17,6 +17,9 @@
 #define MODBUS_READ 0x02
 #define MODBUS_REG_SENSOR0 0x05
 
+#define LED_PORT GPIO_B
+#define LED_PIN	PB0
+
 typedef union{
 	struct{
 		uint8_t addr;
@@ -32,7 +35,7 @@ void RTU_package_ADXL345(FILE *usart_stream, package_t *pkg, axis_t *data);
 void modbus_write(package_t *pkg, uint16_t sensor_reg, uint16_t data);
 uint16_t CRC16_2(uint8_t *buf, int len);
 uint16_t swap_bytes(uint16_t data);
-
+void timer1_hardware_init();
 
 
 #endif /* GY_80_MODBUS_H_ */
